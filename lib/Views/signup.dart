@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:maize_doc/Views/login.dart';
-import 'package:maize_doc/Components/colors.dart';
 import 'package:maize_doc/Views/database_helper.dart';
 
 class Signup extends StatefulWidget {
@@ -22,12 +20,10 @@ class _SignupState extends State<Signup> {
   bool _isConfirmPasswordVisible = false;
 
   String? _emailError;
-  String? _passwordError;
 
   void _validateAndSignUp() async {
     setState(() {
       _emailError = null;
-      _passwordError = null;
     });
 
     final email = _emailController.text;
@@ -45,7 +41,6 @@ class _SignupState extends State<Signup> {
     // Validate password match
     if (password != confirmPassword) {
       setState(() {
-        _passwordError = 'Passwords do not match';
       });
       return;
     }

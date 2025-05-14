@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:sqflite/sql.dart';
 import 'package:maize_doc/Views/onboarding.dart';
-import 'package:maize_doc/Views/disease_detection_page.dart';
-import 'package:maize_doc/Views/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,7 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:Onboarding()
+      home:const Onboarding()
     );
   }
 }
