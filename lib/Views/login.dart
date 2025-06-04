@@ -18,8 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  bool _isPasswordVisible = false;
   bool _rememberMe = false;
+  List<String> _savedCredentials = [];
 
   @override
   void initState() {
@@ -30,9 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _loadSavedCredentials() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _usernameController.text = prefs.getString('username') ?? '';
-      _passwordController.text = prefs.getString('password') ?? '';
-      _rememberMe = prefs.getBool('rememberMe') ?? false;
+      _savedCredentials = prefs.getStringList('credentials') ?? [];
     });
   }
 
@@ -51,16 +49,12 @@ class _LoginScreenState extends State<LoginScreen> {
       _showDialog("Login Failed", "Username or password is incorrect.");
     } else {
       // Save credentials if "Remember Me" is checked
+      final prefs = await SharedPreferences.getInstance();
       if (_rememberMe) {
-        final prefs = await SharedPreferences.getInstance();
-        prefs.setString('username', username);
-        prefs.setString('password', password);
-        prefs.setBool('rememberMe', true);
+        _savedCredentials.add('$username:$password');
+        prefs.setStringList('credentials', _savedCredentials);
       } else {
-        final prefs = await SharedPreferences.getInstance();
-        prefs.remove('username');
-        prefs.remove('password');
-        prefs.setBool('rememberMe', false);
+        prefs.remove('credentials');
       }
 
       // Navigate to WelcomePage if login is successful
@@ -84,6 +78,44 @@ class _LoginScreenState extends State<LoginScreen> {
                 Navigator.of(context).pop();
               },
               child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSavedCredentials() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Select Saved Credentials"),
+          content: SizedBox(
+            height: 200,
+            width: 300,
+            child: ListView.builder(
+              itemCount: _savedCredentials.length,
+              itemBuilder: (context, index) {
+                final credential = _savedCredentials[index].split(':');
+                return ListTile(
+                  title: Text(credential[0]), // Display only the username
+                  subtitle: const Text('Password: *****'), // Placeholder for password
+                  onTap: () {
+                    _usernameController.text = credential[0];
+                    _passwordController.text = credential[1]; // Autofill password
+                    Navigator.of(context).pop();
+                  },
+                );
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Close"),
             ),
           ],
         );
@@ -157,11 +189,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           fontSize: 20.0,
                         ),
                       ),
-                      TextField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          hintText: "Enter Username",
-                          prefixIcon: Icon(Icons.person_outlined),
+                      GestureDetector(
+                        onTap: _showSavedCredentials, // Show saved credentials on tap
+                        child: TextField(
+                          controller: _usernameController,
+                          decoration: InputDecoration(
+                            hintText: "Enter Username",
+                            prefixIcon: Icon(Icons.person_outlined),
+                          ),
+                          onTap: _showSavedCredentials, // Show saved credentials on tap
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -175,23 +211,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       TextField(
                         controller: _passwordController,
-                        obscureText: !_isPasswordVisible,
-                        decoration: InputDecoration(
+                        obscureText: true, // Always obscure the password
+                        decoration: const InputDecoration(
                           hintText: "Enter Password",
                           prefixIcon: Icon(Icons.password_outlined),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _isPasswordVisible = !_isPasswordVisible;
-                              });
-                            },
-                          ),
                         ),
                       ),
-
                       const SizedBox(height: 20),
                       Row(
                         children: [
@@ -203,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               });
                             },
                           ),
-                          const Text("Remember Me", selectionColor: Colors.green,),
+                          const Text("Remember Me", selectionColor: Colors.green),
                         ],
                       ),
                       const SizedBox(height: 30.0),

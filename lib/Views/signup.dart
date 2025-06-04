@@ -26,9 +26,16 @@ class _SignupState extends State<Signup> {
       _emailError = null;
     });
 
+    final username = _usernameController.text;
     final email = _emailController.text;
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
+
+    // Check for empty fields
+    if (username.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      _showDialog("Empty Fields", "Please fill in all fields.");
+      return;
+    }
 
     // Validate email format
     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
@@ -38,10 +45,15 @@ class _SignupState extends State<Signup> {
       return;
     }
 
+    // Validate password strength
+    if (!_isPasswordStrong(password)) {
+      _showDialog("Weak Password", "Password must be at least 8 characters long and include a number and a special character.");
+      return;
+    }
+
     // Validate password match
     if (password != confirmPassword) {
-      setState(() {
-      });
+      _showDialog("Password Mismatch", "Passwords do not match.");
       return;
     }
 
@@ -53,9 +65,18 @@ class _SignupState extends State<Signup> {
     }
 
     // Insert the user into the database
-    _dbHelper.insertUser(_usernameController.text, email, password).then((_) {
+    _dbHelper.insertUser(username, email, password).then((_) {
       _showSuccessDialog();
     });
+  }
+
+  bool _isPasswordStrong(String password) {
+    // Password must be at least 8 characters long, contain at least one number and one special character
+    bool hasMinLength = password.length >= 8;
+    bool hasNumber = RegExp(r'\d').hasMatch(password);
+    bool hasSpecialChar = RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password);
+
+    return hasMinLength && hasNumber && hasSpecialChar;
   }
 
   void _showSuccessDialog() {
@@ -170,7 +191,7 @@ class _SignupState extends State<Signup> {
                       ),
                       TextField(
                         controller: _usernameController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: "Enter Username",
                           prefixIcon: Icon(Icons.person_outlined),
                         ),
@@ -188,7 +209,7 @@ class _SignupState extends State<Signup> {
                         controller: _emailController,
                         decoration: InputDecoration(
                           hintText: "Enter Email",
-                          prefixIcon: Icon(Icons.email_outlined),
+                          prefixIcon: const Icon(Icons.email_outlined),
                           errorText: _emailError,
                         ),
                       ),
@@ -206,7 +227,7 @@ class _SignupState extends State<Signup> {
                         obscureText: !_isPasswordVisible,
                         decoration: InputDecoration(
                           hintText: "Enter Password",
-                          prefixIcon: Icon(Icons.password_outlined),
+                          prefixIcon: const Icon(Icons.password_outlined),
                           suffixIcon: IconButton(
                             icon: Icon(
                               _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
@@ -230,20 +251,10 @@ class _SignupState extends State<Signup> {
                       ),
                       TextField(
                         controller: _confirmPasswordController,
-                        obscureText: !_isConfirmPasswordVisible,
-                        decoration: InputDecoration(
+                        obscureText: true, // Make the password invisible
+                        decoration: const InputDecoration(
                           hintText: "Re-Enter Password",
                           prefixIcon: Icon(Icons.password_outlined),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                              });
-                            },
-                          ),
                         ),
                       ),
                       const SizedBox(height: 15.0),

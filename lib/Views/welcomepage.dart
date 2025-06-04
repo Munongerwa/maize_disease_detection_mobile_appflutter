@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:maize_doc/Views/aboutpage.dart';
 import 'package:maize_doc/Views/disease_detection_page.dart';
+import 'package:maize_doc/Views/farmingadvice.dart';
+import 'package:maize_doc/Views/history.dart';
 import 'package:maize_doc/Views/login.dart';
 import 'package:maize_doc/Views/profile.dart';
 
@@ -13,7 +15,7 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Maize Doc Home",
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -28,7 +30,7 @@ class WelcomePage extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.green,
               ),
               child: Column(
@@ -36,14 +38,14 @@ class WelcomePage extends StatelessWidget {
                 children: [
                   Text(
                     "Hello, $username",
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Text(
+                  const SizedBox(height: 10),
+                  const Text(
                     "Welcome to your dashboard!",
                     style: TextStyle(color: Colors.white),
                   ),
@@ -51,15 +53,15 @@ class WelcomePage extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Profile'),
+              leading: const Icon(Icons.person),
+              title: const Text('Profile'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushReplacement(
@@ -69,32 +71,36 @@ class WelcomePage extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.info),
-              title: Text('About'),
-              onTap: () {
-                Navigator.pop(context);
-                // Assuming there's an AboutPage class
-                   Navigator.pushReplacement(
-                   context,
-                   MaterialPageRoute(builder: (context) => AboutPage(username: username,)),
-                 );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Logout'),
+              leading: const Icon(Icons.history),
+              title: const Text('History'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(builder: (context) => DiseaseHistoryPage(username: username,)), // Pass username directly
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text('About'),
+              onTap: () {
+                Navigator.pop(context);
+                // Assuming there's an AboutPage class
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => AboutPage(username: username,)),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
                 );
               },
             ),
@@ -126,7 +132,7 @@ class WelcomePage extends StatelessWidget {
                   children: [
                     Text(
                       "Welcome,\n$username!",
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 25.0,
                         fontWeight: FontWeight.bold,
@@ -169,12 +175,12 @@ class WelcomePage extends StatelessWidget {
                       ),
                       _buildDashboardIcon(
                         context,
-                        'Maize Doctor Advice',
+                        'Farming Advice',
                         'image/doctor.png',
                             () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => DetectionScreen(username: username)), // Pass username
+                            MaterialPageRoute(builder: (context) => FarmingAdvicePage(username: username)), // Pass username
                           );
                         },
                       ),
@@ -217,10 +223,10 @@ class WelcomePage extends StatelessWidget {
               height: 60,
               width: 60,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               label,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ],
         ),

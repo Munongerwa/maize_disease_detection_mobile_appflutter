@@ -16,8 +16,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final DatabaseHelper _dbHelper = DatabaseHelper();
   String? _email;
-  String? _password;
-  File? _profileImage; // Variable to hold the profile image
+  File? _profileImage;
 
   @override
   void initState() {
@@ -26,7 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _fetchUserDetails() async {
-    final users = await _dbHelper.getUsers(); // Fetch all users
+    final users = await _dbHelper.getUsers();
     final user = users.firstWhere(
           (user) => user['username'] == widget.username,
       orElse: () => {},
@@ -35,7 +34,9 @@ class _ProfilePageState extends State<ProfilePage> {
     if (user.isNotEmpty) {
       setState(() {
         _email = user['email'];
-        _password = user['password'];
+        if (user['profile_image'] != null) {
+          _profileImage = File(user['profile_image']);
+        }
       });
     }
   }
@@ -49,14 +50,12 @@ class _ProfilePageState extends State<ProfilePage> {
         _profileImage = File(pickedFile.path);
       });
 
-      // Optionally save the image path to the database or locally
       await _saveProfileImagePath(pickedFile.path);
     }
   }
 
   Future<void> _saveProfileImagePath(String path) async {
-    // You can implement saving the image path to the database if needed
-    // For example: await _dbHelper.saveProfileImagePath(widget.username, path);
+    await _dbHelper.saveProfileImagePath(widget.username, path);
   }
 
   @override

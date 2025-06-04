@@ -6,8 +6,10 @@ import 'package:maize_doc/Views/Common_RustRecommendations.dart';
 import 'package:maize_doc/Views/Gray_Leaf_SpotRecommendations.dart';
 import 'package:maize_doc/Views/BlightRecommendations.dart';
 import 'dart:developer' as devtools;
-
 import 'package:maize_doc/Views/welcomepage.dart';
+import 'package:maize_doc/Views/database_helper.dart';
+
+import 'database_helper.dart'; // Import your DatabaseHelper
 
 class DetectionScreen extends StatefulWidget {
   final String username;
@@ -82,7 +84,7 @@ class _DetectionScreenState extends State<DetectionScreen> with SingleTickerProv
       asynch: true,
     );
 
-    if (recognitions == null) {
+    if (recognitions == null || recognitions.isEmpty) {
       devtools.log("recognitions is Null");
       return;
     }
@@ -92,6 +94,9 @@ class _DetectionScreenState extends State<DetectionScreen> with SingleTickerProv
       confidence = (recognitions[0]['confidence'] * 100);
       label = recognitions[0]['label'].toString();
     });
+
+    // Store the detected disease in the database
+    await DatabaseHelper().insertDiseaseHistory(label, confidence);
   }
 
   void navigateToRecommendations(String diseaseName) {
@@ -99,13 +104,13 @@ class _DetectionScreenState extends State<DetectionScreen> with SingleTickerProv
 
     switch (diseaseName) {
       case 'Blight':
-        recommendationsPage = const BlightRecommendations();
+        recommendationsPage = BlightRecommendations(username: widget.username);
         break;
       case 'Common_Rust':
-        recommendationsPage = const Common_RustRecommendations();
+        recommendationsPage = Common_RustRecommendations(username: widget.username);
         break;
       case 'Gray_Leaf_Spot':
-        recommendationsPage = const Gray_Leaf_SpotRecommendations();
+        recommendationsPage = Gray_Leaf_SpotRecommendations(username: widget.username);
         break;
       default:
         recommendationsPage = Scaffold(
@@ -120,9 +125,44 @@ class _DetectionScreenState extends State<DetectionScreen> with SingleTickerProv
     );
   }
 
+  Future<void> showDiseaseHistory() async {
+    List<Map<String, dynamic>> history = await DatabaseHelper().getDiseaseHistory();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Disease Detection History"),
+          content: SizedBox(
+            height: 300,
+            width: 300,
+            child: ListView.builder(
+              itemCount: history.length,
+              itemBuilder: (context, index) {
+                final record = history[index];
+                return ListTile(
+                  title: Text(record['disease']),
+                  subtitle: Text("Confidence: ${record['confidence'].toStringAsFixed(2)}%"),
+                  trailing: Text(record['timestamp']),
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("Close"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: isDarkMode
           ? ThemeData.dark().copyWith(
         appBarTheme: const AppBarTheme(
@@ -142,7 +182,7 @@ class _DetectionScreenState extends State<DetectionScreen> with SingleTickerProv
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text("Disease Detection ", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)), // Include username
+          title: const Text("Disease Detection", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
           backgroundColor: Colors.green,
           actions: [
             Switch(
@@ -213,7 +253,6 @@ class _DetectionScreenState extends State<DetectionScreen> with SingleTickerProv
                                               backgroundColor: Colors.white,
                                             ),
                                           ),
-                                          // Recommendation button
                                           const SizedBox(height: 1),
                                           ElevatedButton(
                                             onPressed: () {
@@ -281,7 +320,7 @@ class _DetectionScreenState extends State<DetectionScreen> with SingleTickerProv
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomePage(username: widget.username))); // Use widget.username
+            Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomePage(username: widget.username)));
           },
           child: const Icon(Icons.home),
           backgroundColor: Colors.green,
