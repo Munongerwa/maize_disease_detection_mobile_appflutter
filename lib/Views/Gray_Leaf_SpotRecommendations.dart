@@ -88,101 +88,41 @@ class _Gray_Leaf_SpotRecommendationsState extends State<Gray_Leaf_SpotRecommenda
                   ),
                   const SizedBox(height: 16.0),
 
-                  // New topic tile for gray leaf spot disease
-                  ExpansionTile(
-                    title: Text(
-                      'What is Gray Leaf Spot Disease?',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'Gray leaf spot disease is caused by the fungus *Cercospora zeae-maydis*. This disease primarily affects maize (corn) crops, leading to grayish lesions on the leaves, which can reduce photosynthetic capacity and yield.',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
+                  // What is Gray Leaf Spot Disease?
+                  _buildExpansionTile(
+                    title: 'What is Gray Leaf Spot Disease?',
+                    content:
+                    'Gray Leaf Spot is caused by the fungus Cercospora zeae-maydis, affecting maize crops. It leads to significant yield losses as it causes leaf blighting and premature leaf drop.',
                   ),
                   const SizedBox(height: 16.0),
 
-                  // Collapsible tiles for symptoms
-                  ExpansionTile(
-                    title: Text(
-                      'Symptoms',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          '• Grayish lesions on leaves.\n'
-                              '• Yellowing of leaf margins.\n'
-                              '• Premature leaf drop.\n'
-                              '• Reduced stalk strength.',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
+                  // Symptoms
+                  _buildExpansionTile(
+                    title: 'Symptoms',
+                    content:
+                    '• Grayish lesions on leaves.\n'
+                        '• Yellowing of leaf margins.\n'
+                        '• Premature leaf drop.\n'
+                        '• Reduced photosynthesis leading to stunted growth.',
                   ),
                   const SizedBox(height: 16.0),
 
                   // Control
-                  ExpansionTile(
-                    title: Text(
-                      'Control',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          '• Use resistant maize varieties.\n'
-                              '• Apply appropriate fungicides.\n'
-                              '• Practice crop rotation and good field hygiene.',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
+                  _buildExpansionTile(
+                    title: 'Control',
+                    content: '• Use resistant varieties\n• Apply fungicides as necessary',
                   ),
                   const SizedBox(height: 16.0),
 
                   // Recommendations
-                  ExpansionTile(
-                    title: Text(
-                      'Recommendations',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          '• Monitor for early symptoms.\n'
-                              '• Maintain proper plant spacing.\n'
-                              '• Rotate with non-host crops.',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
+                  _buildExpansionTile(
+                    title: 'Recommendations',
+                    content: '• Monitor humidity levels\n• Improve air circulation in crop fields',
                   ),
                   const SizedBox(height: 16.0),
 
                   // Chemicals Needed
-                  ExpansionTile(
-                    title: Text(
-                      'Chemicals Needed',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          '• Fungicides such as azoxystrobin and pyraclostrobin.',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
-                  ),
+                  _buildChemicalsNeeded(),
                   const SizedBox(height: 32.0), // Extra space at the bottom
                 ],
               ),
@@ -222,6 +162,81 @@ class _Gray_Leaf_SpotRecommendationsState extends State<Gray_Leaf_SpotRecommenda
         unselectedItemColor: Colors.grey,
       ),
       backgroundColor: _isDarkMode ? Colors.black : Colors.white,
+    );
+  }
+
+  Widget _buildExpansionTile({required String title, required String content, List<Widget>? children}) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      color: _isDarkMode ? Colors.grey[850] : Colors.green[200], // Set background color
+      child: ExpansionTile(
+        title: Text(
+          title,
+          style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              content,
+              style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
+            ),
+          ),
+          if (children != null) ...children, // Add children if present
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChemicalsNeeded() {
+    return _buildExpansionTile(
+      title: 'Chemicals Needed',
+      content: '',
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(0.5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildChemicalCard('image/Shavitrust.jpg', 'Shavit'),
+              const SizedBox(height: 16.0),
+              _buildChemicalCard('assets/images/chemical2.jpg', 'Copper-based Solution'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChemicalCard(String imagePath, String chemicalName) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      color: _isDarkMode ? Colors.grey[850] : Colors.green[200], // Set background color
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+            child: Container(
+              width: 150, // Set the desired width
+              height: 150, // Set the desired height
+              child: Image.asset(imagePath, fit: BoxFit.cover),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              chemicalName,
+              style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

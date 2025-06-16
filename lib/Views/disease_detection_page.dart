@@ -9,8 +9,6 @@ import 'dart:developer' as devtools;
 import 'package:maize_doc/Views/welcomepage.dart';
 import 'package:maize_doc/Views/database_helper.dart';
 
-import 'database_helper.dart'; // Import your DatabaseHelper
-
 class DetectionScreen extends StatefulWidget {
   final String username;
 
@@ -159,6 +157,28 @@ class _DetectionScreenState extends State<DetectionScreen> with SingleTickerProv
     );
   }
 
+  void _onNavigationTapped(int index) {
+    switch (index) {
+      case 0: // Home
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => WelcomePage(username: widget.username)),
+        );
+        break;
+      case 1: // Refresh
+        setState(() {
+          // Reset the state to refresh the page
+          filePath = null;
+          label = '';
+          confidence = 0.0;
+        });
+        break;
+      case 2: // Back
+        Navigator.pop(context);
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -185,11 +205,14 @@ class _DetectionScreenState extends State<DetectionScreen> with SingleTickerProv
           title: const Text("Disease Detection", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
           backgroundColor: Colors.green,
           actions: [
-            Switch(
-              value: isDarkMode,
-              onChanged: (value) {
+            IconButton(
+              icon: Icon(
+                isDarkMode ? Icons.wb_sunny : Icons.nights_stay,
+                color: Colors.white,
+              ),
+              onPressed: () {
                 setState(() {
-                  isDarkMode = value;
+                  isDarkMode = !isDarkMode;
                 });
               },
             ),
@@ -318,14 +341,26 @@ class _DetectionScreenState extends State<DetectionScreen> with SingleTickerProv
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomePage(username: widget.username)));
-          },
-          child: const Icon(Icons.home),
-          backgroundColor: Colors.green,
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.refresh),
+              label: 'Refresh',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.arrow_back),
+              label: 'Back',
+            ),
+          ],
+          onTap: _onNavigationTapped,
+          backgroundColor: Colors.green, // Set background color
+          selectedItemColor: Colors.white, // Set selected item color
+          unselectedItemColor: Colors.white70, // Set unselected item color
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }

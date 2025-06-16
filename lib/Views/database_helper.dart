@@ -109,6 +109,15 @@ class DatabaseHelper {
     await db.delete('disease_history'); // Deletes all records from the table
   }
 
+  Future<void> deleteDiseaseHistoryEntry(int id) async {
+    final db = await database;
+    await db.delete(
+      'disease_history',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
   Future<void> saveProfileImagePath(String username, String imagePath) async {
     final db = await database;
     await db.update(

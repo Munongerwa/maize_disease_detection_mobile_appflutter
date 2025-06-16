@@ -5,6 +5,7 @@ import 'package:maize_doc/Views/farmingadvice.dart';
 import 'package:maize_doc/Views/history.dart';
 import 'package:maize_doc/Views/login.dart';
 import 'package:maize_doc/Views/profile.dart';
+import 'package:flutter/services.dart'; // Import for SystemNavigator
 
 class WelcomePage extends StatelessWidget {
   final String username;
@@ -24,6 +25,14 @@ class WelcomePage extends StatelessWidget {
         ),
         backgroundColor: Colors.white54,
         foregroundColor: Colors.green,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout_outlined, color: Colors.red), // Set the icon color to red
+            onPressed: () {
+              _showLogoutConfirmationDialog(context);
+            },
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -66,7 +75,7 @@ class WelcomePage extends StatelessWidget {
                 Navigator.pop(context);
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => ProfilePage(username: username)), // Pass username directly
+                  MaterialPageRoute(builder: (context) => ProfilePage(username: username)),
                 );
               },
             ),
@@ -77,7 +86,7 @@ class WelcomePage extends StatelessWidget {
                 Navigator.pop(context);
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => DiseaseHistoryPage(username: username,)), // Pass username directly
+                  MaterialPageRoute(builder: (context) => DiseaseHistoryPage(username: username)),
                 );
               },
             ),
@@ -86,10 +95,9 @@ class WelcomePage extends StatelessWidget {
               title: const Text('About'),
               onTap: () {
                 Navigator.pop(context);
-                // Assuming there's an AboutPage class
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => AboutPage(username: username,)),
+                  MaterialPageRoute(builder: (context) => AboutPage(username: username)),
                 );
               },
             ),
@@ -97,11 +105,7 @@ class WelcomePage extends StatelessWidget {
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
               onTap: () {
-                Navigator.pop(context);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                );
+                _showLogoutConfirmationDialog(context);
               },
             ),
           ],
@@ -186,12 +190,12 @@ class WelcomePage extends StatelessWidget {
                       ),
                       _buildDashboardIcon(
                         context,
-                        'Tutorial',
-                        'image/tutorial.png',
+                        'History',
+                        'image/history.png',
                             () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => DetectionScreen(username: username)), // Pass username
+                            MaterialPageRoute(builder: (context) => DiseaseHistoryPage(username: username)), // Pass username
                           );
                         },
                       ),
@@ -231,6 +235,34 @@ class WelcomePage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showLogoutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Logout"),
+          content: const Text("Are you sure you want to exit the app?"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+            TextButton(
+              child: const Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                // Exit the app
+                SystemNavigator.pop(); // Use SystemNavigator to exit the app
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

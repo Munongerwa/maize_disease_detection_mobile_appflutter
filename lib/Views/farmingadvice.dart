@@ -16,126 +16,24 @@ class _FarmingAdvicePageState extends State<FarmingAdvicePage> {
   String farmingAdvice = '';
 
   final Map<String, List<String>> provincesAndDistricts = {
-    'Mashonaland Central': [
-      'Bindura',
-      'Guruve',
-      'Mazowe',
-      'Mbire',
-      'Mount Darwin',
-      'Muzarabani',
-      'Rushinga',
-      'Shamva',
-    ],
-    'Manicaland': [
-      'Mutare',
-      'Makoni',
-      'Buhera',
-      'Chipinge',
-      'Mutasa',
-      'Nyanga',
-    ],
-    'Masvingo': [
-      'Masvingo',
-      'Chiredzi',
-      'Bikita',
-      'Gutu',
-      'Mwenezi',
-      'Zaka',
-    ],
-    'Mashonaland West': [
-      'Chegutu',
-      'Hurungwe',
-      'Kariba',
-      'Makonde',
-      'Mhondoro-Ngezi',
-      'Sanyati',
-      'Zvimba',
-    ],
-    'Mashonaland East': [
-      'Chikomba',
-      'Goromonzi',
-      'Marondera',
-      'Mudzi',
-      'Murehwa',
-      'Mutoko',
-      'Seke',
-      'Uzumba-Maramba-Pfungwe',
-      'Wedza',
-    ],
-    'Matabeleland North': [
-      'Binga',
-      'Bubi',
-      'Hwange',
-      'Lupane',
-      'Nkayi',
-      'Tsholotsho',
-      'Umguza',
-    ],
-    'Matabeleland South': [
-      'Beitbridge',
-      'Bulilima',
-      'Gwanda',
-      'Insiza',
-      'Mangwe',
-      'Matobo',
-      'Umzingwane',
-    ],
-    'Midlands': [
-      'Chirumhanzu',
-      'Gokwe North',
-      'Gokwe South',
-      'Gweru',
-      'Kwekwe',
-      'Mberengwa',
-      'Shurugwi',
-      'Zvishavane',
-    ],
-    'Harare': [
-      'Harare',
-      'Chitungwiza',
-      'Epworth',
-    ],
-    'Bulawayo': [
-      'Bulawayo',
-    ],
+    'Mashonaland Central': ['Bindura', 'Guruve', 'Mazowe', 'Mbire', 'Mount Darwin', 'Muzarabani', 'Rushinga', 'Shamva'],
+    'Manicaland': ['Mutare', 'Makoni', 'Buhera', 'Chipinge', 'Mutasa', 'Nyanga'],
+    'Masvingo': ['Masvingo', 'Chiredzi', 'Bikita', 'Gutu', 'Mwenezi', 'Zaka'],
+    'Mashonaland West': ['Chegutu', 'Hurungwe', 'Kariba', 'Makonde', 'Mhondoro-Ngezi', 'Sanyati', 'Zvimba'],
+    'Mashonaland East': ['Chikomba', 'Goromonzi', 'Marondera', 'Mudzi', 'Murehwa', 'Mutoko', 'Seke', 'Uzumba-Maramba-Pfungwe', 'Wedza'],
+    'Matabeleland North': ['Binga', 'Bubi', 'Hwange', 'Lupane', 'Nkayi', 'Tsholotsho', 'Umguza'],
+    'Matabeleland South': ['Beitbridge', 'Bulilima', 'Gwanda', 'Insiza', 'Mangwe', 'Matobo', 'Umzingwane'],
+    'Midlands': ['Chirumhanzu', 'Gokwe North', 'Gokwe South', 'Gweru', 'Kwekwe', 'Mberengwa', 'Shurugwi', 'Zvishavane'],
+    'Harare': ['Harare', 'Chitungwiza', 'Epworth'],
+    'Bulawayo': ['Bulawayo'],
   };
 
   void _updateFarmingRegion() {
-    List<String> region1Districts = [
-      'Chipinge',
-      'Mutasa',
-      'Mazowe',
-      // Add more districts for Region 1
-    ];
-
-    List<String> region2Districts = [
-      'Mutare',
-      'Makoni',
-      'Buhera',
-      'Nyanga',
-      // Add more districts for Region 2
-    ];
-
-    List<String> region3Districts = [
-      'Gweru',
-      'Kwekwe',
-      // Add more districts for Region 3
-    ];
-
-    List<String> region4Districts = [
-      'Bulawayo',
-      'Lupane',
-      'Binga',
-      'Hwange',
-      'Masvingo',
-      // Add more districts for Region 4
-    ];
-
-    List<String> region5Districts = [
-      'Chiredzi',
-      'Beitbridge',
-      // Add more districts for Region 5
-    ];
+    List<String> region1Districts = ['Chipinge', 'Mutasa', 'Mazowe'];
+    List<String> region2Districts = ['Mutare', 'Makoni', 'Buhera', 'Nyanga'];
+    List<String> region3Districts = ['Gweru', 'Kwekwe'];
+    List<String> region4Districts = ['Bulawayo', 'Lupane', 'Binga', 'Hwange', 'Masvingo'];
+    List<String> region5Districts = ['Chiredzi', 'Beitbridge'];
 
     if (region1Districts.contains(selectedDistrict)) {
       farmingRegion = 'Region 1';
@@ -158,140 +56,221 @@ class _FarmingAdvicePageState extends State<FarmingAdvicePage> {
     }
   }
 
+  void _refresh() {
+    setState(() {
+      selectedProvince = null;
+      selectedDistrict = null;
+      farmingRegion = '';
+      farmingAdvice = '';
+    });
+  }
+
+  void _navigateToHome() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => WelcomePage(username: widget.username)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Farming Advice"),
+        title: const Text("Farming Advice", style: TextStyle(color: Colors.white)),
         backgroundColor: const Color(0xFF0DB14A),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            DropdownButton<String>(
-              hint: const Text('Select Province'),
-              value: selectedProvince,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedProvince = newValue;
-                  selectedDistrict = null; // Reset district when province changes
-                  farmingRegion = ''; // Reset farming region
-                  farmingAdvice = ''; // Reset farming advice
-                });
-              },
-              items: provincesAndDistricts.keys.map<DropdownMenuItem<String>>((String province) {
-                return DropdownMenuItem<String>(
-                  value: province,
-                  child: Text(province),
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 16),
+            _buildLabel("Let Us Find Your Farming Region"),
+            SizedBox(height: 8),
+            _buildProvinceDropdown(),
+            SizedBox(height: 0),
             if (selectedProvince != null) ...[
-              DropdownButton<String>(
-                hint: const Text('Select District'),
-                value: selectedDistrict,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedDistrict = newValue;
-                    _updateFarmingRegion();
-                  });
-                },
-                items: provincesAndDistricts[selectedProvince]!.map<DropdownMenuItem<String>>((String district) {
-                  return DropdownMenuItem<String>(
-                    value: district,
-                    child: Text(district),
-                  );
-                }).toList(),
-              ),
+              _buildLabel("Select District"),
+              SizedBox(height: 8),
+              _buildDistrictDropdown(),
               SizedBox(height: 16),
             ],
-            Text(
-              'Farming Region: $farmingRegion',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              farmingAdvice,
-              style: const TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 16),
-            _buildAdviceCard(
-              title: "Soil Preparation",
-              advice:
-              "Ensure that the soil is well-tilled and enriched with organic matter. Test the soil pH to ensure it is between 5.8 and 7.0 for optimal maize growth.",
-            ),
-            _buildAdviceCard(
-              title: "Seed Selection",
-              advice:
-              "Choose high-quality seeds that are suited to your local climate. Look for drought-resistant and pest-resistant varieties.",
-            ),
-            _buildAdviceCard(
-              title: "Planting",
-              advice:
-              "Plant maize seeds at a depth of 1-2 inches and ensure proper spacing between rows (30-36 inches) and within rows (8-12 inches).",
-            ),
-            _buildAdviceCard(
-              title: "Watering",
-              advice:
-              "Maize requires adequate moisture, especially during the flowering stage. Ensure regular watering, particularly in dry spells.",
-            ),
-            _buildAdviceCard(
-              title: "Fertilization",
-              advice:
-              "Use a balanced fertilizer with NPK (Nitrogen, Phosphorus, Potassium) to promote healthy growth. Apply fertilizers based on soil tests.",
-            ),
-            _buildAdviceCard(
-              title: "Pest and Disease Management",
-              advice:
-              "Regularly monitor crops for pests and diseases. Use integrated pest management (IPM) practices to control infestations.",
-            ),
-            _buildAdviceCard(
-              title: "Harvesting",
-              advice:
-              "Harvest maize when the kernels are firm and the husks are dry. Proper harvesting techniques can help reduce spoilage.",
-            ),
+            if (selectedDistrict != null) ...[
+              _buildLabel("Farming Region"),
+              SizedBox(height: 8),
+              _buildFarmingRegionInfo(),
+              SizedBox(height: 16),
+            ],
+            _buildMaizeFarmingAdviceTile(),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => WelcomePage(username: widget.username)),
-          );
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.refresh),
+            label: 'Refresh',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.arrow_back),
+            label: 'Back',
+          ),
+        ],
+        currentIndex: 0,
+        onTap: (index) {
+          if (index == 0) {
+            _navigateToHome(); // Navigate to Home
+          } else if (index == 1) {
+            _refresh(); // Refresh the page
+          } else if (index == 2) {
+            Navigator.pop(context); // Go back
+          }
         },
-        child: const Icon(Icons.home),
-        backgroundColor: const Color(0xFF0DB14A),
+      backgroundColor: Colors.green, // Set the background color
+      selectedItemColor: Colors.white, // Set the selected item color
+      unselectedItemColor: Colors.white70, // Set the unselected item color
+    ),
+    );
+  }
+
+  Widget _buildLabel(String text) {
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _buildProvinceDropdown() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.green[200],
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), spreadRadius: 2, blurRadius: 5)],
+      ),
+      child: DropdownButton<String>(
+        hint: Center(child: const Text('Select Province')),
+        value: selectedProvince,
+        isExpanded: true,
+        underline: SizedBox(), // Remove the underline
+        onChanged: (String? newValue) {
+          setState(() {
+            selectedProvince = newValue;
+            selectedDistrict = null; // Reset district when province changes
+            farmingRegion = ''; // Reset farming region
+            farmingAdvice = ''; // Reset farming advice
+          });
+        },
+        items: provincesAndDistricts.keys.map<DropdownMenuItem<String>>((String province) {
+          return DropdownMenuItem<String>(
+            value: province,
+            child: Center(child: Text(province)), // Center-align the province text
+          );
+        }).toList(),
       ),
     );
   }
 
-  Widget _buildAdviceCard({required String title, required String advice}) {
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              advice,
-              style: const TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
+  Widget _buildDistrictDropdown() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.green[200],
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), spreadRadius: 2, blurRadius: 5)],
       ),
+      child: DropdownButton<String>(
+        hint: Center(child: const Text('Select District')),
+        value: selectedDistrict,
+        isExpanded: true,
+        underline: SizedBox(), // Remove the underline
+        onChanged: (String? newValue) {
+          setState(() {
+            selectedDistrict = newValue;
+            _updateFarmingRegion();
+          });
+        },
+        items: provincesAndDistricts[selectedProvince]!.map<DropdownMenuItem<String>>((String district) {
+          return DropdownMenuItem<String>(
+            value: district,
+            child: Center(child: Text(district)), // Center-align the district text
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildFarmingRegionInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          farmingRegion,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8),
+        Text(
+          farmingAdvice,
+          style: const TextStyle(fontSize: 16),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMaizeFarmingAdviceTile() {
+    return ExpansionTile(
+      title: const Text(
+        'Maize Farming Advice',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      children: [
+        _buildAdviceExpansionTile(
+          title: "Soil Preparation",
+          advice: "Ensure that the soil is well-tilled and enriched with organic matter. Test the soil pH to ensure it is between 5.8 and 7.0 for optimal maize growth.",
+        ),
+        _buildAdviceExpansionTile(
+          title: "Seed Selection",
+          advice: "Choose high-quality seeds that are suited to your local climate. Look for drought-resistant and pest-resistant varieties.",
+        ),
+        _buildAdviceExpansionTile(
+          title: "Planting",
+          advice: "Plant maize seeds at a depth of 1-2 inches and ensure proper spacing between rows (30-36 inches) and within rows (8-12 inches).",
+        ),
+        _buildAdviceExpansionTile(
+          title: "Watering",
+          advice: "Maize requires adequate moisture, especially during the flowering stage. Ensure regular watering, particularly in dry spells.",
+        ),
+        _buildAdviceExpansionTile(
+          title: "Fertilization",
+          advice: "Use a balanced fertilizer with NPK (Nitrogen, Phosphorus, Potassium) to promote healthy growth. Apply fertilizers based on soil tests.",
+        ),
+        _buildAdviceExpansionTile(
+          title: "Pest and Disease Management",
+          advice: "Regularly monitor crops for pests and diseases. Use integrated pest management (IPM) practices to control infestations.",
+        ),
+        _buildAdviceExpansionTile(
+          title: "Harvesting",
+          advice: "Harvest maize when the kernels are firm and the husks are dry. Proper harvesting techniques can help reduce spoilage.",
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAdviceExpansionTile({required String title, required String advice}) {
+    return ExpansionTile(
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            advice,
+            style: const TextStyle(fontSize: 14),
+          ),
+        ),
+      ],
     );
   }
 }

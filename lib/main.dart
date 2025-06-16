@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:maize_doc/Views/BlightRecommendations.dart';
+import 'package:maize_doc/Views/Gray_Leaf_SpotRecommendations.dart';
 //import 'package:maize_doc/Views/database_helper.dart';
 //import 'package:maize_doc/Views/database_helper.dart';
 //import 'package:maize_doc/Views/login.dart';
@@ -6,6 +8,8 @@ import 'package:flutter/material.dart';
 //import 'package:maize_doc/Views/Gray_Leaf_SpotRecommendations.dart';
 //import 'package:maize_doc/Views/onboarding.dart';
 import 'package:maize_doc/Views/splash_screen.dart';
+
+import 'Views/Common_RustRecommendations.dart';
 
 
 void main() {

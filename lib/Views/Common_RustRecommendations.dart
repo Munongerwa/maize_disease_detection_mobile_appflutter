@@ -89,100 +89,40 @@ class _Common_RustRecommendationsState extends State<Common_RustRecommendations>
                   const SizedBox(height: 16.0),
 
                   // New topic tile for common rust disease
-                  ExpansionTile(
-                    title: Text(
-                      'What is Common Rust Disease?',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'Common rust disease is caused by the fungus *Puccinia sorghi*, which affects maize (corn) crops. The disease is characterized by the appearance of reddish-brown pustules on the leaves, leading to reduced photosynthesis and ultimately affecting yield.',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
+                  _buildExpansionTile(
+                    title: 'What is Common Rust Disease?',
+                    content:
+                    'Common rust is caused by the fungus Puccinia sorghi, affecting maize (corn) crops. It results in reddish-brown pustules on leaves, which can lead to significant yield losses if not managed properly.',
                   ),
                   const SizedBox(height: 16.0),
 
-                  // Collapsible tiles for symptoms
-                  ExpansionTile(
-                    title: Text(
-                      'Symptoms',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          '• Reddish-brown pustules on leaves.\n'
-                              '• Yellowing of surrounding leaf tissue.\n'
-                              '• Premature leaf drop.\n'
-                              '• Stunted growth in severe cases.',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
+                  // Symptoms
+                  _buildExpansionTile(
+                    title: 'Symptoms',
+                    content:
+                    '• Reddish-brown pustules on leaves.\n'
+                        '• Yellowing of leaf tissue around pustules.\n'
+                        '• Premature leaf drop in severe cases.\n'
+                        '• Reduced photosynthesis leading to stunted growth.',
                   ),
                   const SizedBox(height: 16.0),
 
                   // Control
-                  ExpansionTile(
-                    title: Text(
-                      'Control',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          '• Use resistant maize varieties.\n'
-                              '• Apply fungicides as needed.\n'
-                              '• Practice crop rotation.',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
+                  _buildExpansionTile(
+                    title: 'Control',
+                    content: '• Use resistant varieties\n• Apply fungicides as necessary',
                   ),
                   const SizedBox(height: 16.0),
 
                   // Recommendations
-                  ExpansionTile(
-                    title: Text(
-                      'Recommendations',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          '• Monitor for early signs of infection.\n'
-                              '• Ensure proper spacing between plants.\n'
-                              '• Rotate with non-host crops.',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
+                  _buildExpansionTile(
+                    title: 'Recommendations',
+                    content: '• Monitor plant health regularly\n• Implement crop rotation strategies',
                   ),
                   const SizedBox(height: 16.0),
 
                   // Chemicals Needed
-                  ExpansionTile(
-                    title: Text(
-                      'Chemicals Needed',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          '• Fungicides such as azoxystrobin and propiconazole.',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
-                  ),
+                  _buildChemicalsNeeded(),
                   const SizedBox(height: 32.0), // Extra space at the bottom
                 ],
               ),
@@ -195,10 +135,6 @@ class _Common_RustRecommendationsState extends State<Common_RustRecommendations>
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info),
-            label: 'Info',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.arrow_back),
@@ -222,6 +158,81 @@ class _Common_RustRecommendationsState extends State<Common_RustRecommendations>
         unselectedItemColor: Colors.grey,
       ),
       backgroundColor: _isDarkMode ? Colors.black : Colors.white,
+    );
+  }
+
+  Widget _buildExpansionTile({required String title, required String content, List<Widget>? children}) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      color: _isDarkMode ? Colors.grey[850] : Colors.green[200], // Set background color
+      child: ExpansionTile(
+        title: Text(
+          title,
+          style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              content,
+              style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
+            ),
+          ),
+          if (children != null) ...children, // Add children if present
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChemicalsNeeded() {
+    return _buildExpansionTile(
+      title: 'Chemicals Needed',
+      content: '',
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(0.5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildChemicalCard('image/Shavitrust.jpg', 'Shavit'),
+              const SizedBox(height: 16.0),
+              _buildChemicalCard('image/Envigo-500.jpg', 'Envigo-500'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChemicalCard(String imagePath, String chemicalName) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      color: _isDarkMode ? Colors.grey[850] : Colors.green[200], // Set background color
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+            child: Container(
+              width: 150, // Set the desired width
+              height: 150, // Set the desired height
+              child: Image.asset(imagePath, fit: BoxFit.cover),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              chemicalName,
+              style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

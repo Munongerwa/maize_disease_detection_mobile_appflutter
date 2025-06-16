@@ -89,98 +89,42 @@ class _BlightRecommendationsState extends State<BlightRecommendations> {
                   const SizedBox(height: 16.0),
 
                   // New topic tile for maize blight disease
-                  ExpansionTile(
-                    title: Text(
-                      'What is Maize Blight Disease?',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'Maize blight disease is caused by various fungal pathogens that affect maize (corn) crops. The disease can lead to significant yield losses due to symptoms such as wilting, yellowing of leaves, and premature leaf drop. Proper identification and management practices, including crop rotation and the use of resistant varieties, are essential for controlling the disease.',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
+                  _buildExpansionTile(
+                    title: 'What is Maize Blight Disease?',
+                    content:
+                    'Maize blight disease is caused by various fungal pathogens that affect maize (corn) crops. The disease can lead to significant yield losses due to symptoms such as wilting, yellowing of leaves, and premature leaf drop. Proper identification and management practices, including crop rotation and the use of resistant varieties, are essential for controlling the disease.',
                   ),
                   const SizedBox(height: 16.0),
 
                   // Collapsible tiles for symptoms
-                  ExpansionTile(
-                    title: Text(
-                      'Symptoms',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          '• Wilting Leaves: Leaves may appear droopy and lack firmness.\n'
-                              '• Brown Spots: Small, dark brown spots can develop on the leaves.\n'
-                              '• Yellowing: A general yellowing of the foliage may occur, especially on the lower leaves.\n'
-                              '• Premature Leaf Drop: Infected plants may shed leaves earlier than normal.\n'
-                              '• Stunted Growth: Overall plant growth may be stunted.\n'
-                              '• Fungal Growth: You may observe a white or grayish fungal growth on the leaves.',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
+                  _buildExpansionTile(
+                    title: 'Symptoms',
+                    content:
+                    '• Wilting Leaves: Leaves may appear droopy and lack firmness.\n'
+                        '• Brown Spots: Small, dark brown spots can develop on the leaves.\n'
+                        '• Yellowing: A general yellowing of the foliage may occur, especially on the lower leaves.\n'
+                        '• Premature Leaf Drop: Infected plants may shed leaves earlier than normal.\n'
+                        '• Stunted Growth: Overall plant growth may be stunted.\n'
+                        '• Fungal Growth: You may observe a white or grayish fungal growth on the leaves.',
                   ),
                   const SizedBox(height: 16.0),
 
                   // Control
-                  ExpansionTile(
-                    title: Text(
-                      'Control',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          '• Remove infected plants\n• Practice crop rotation',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
+                  _buildExpansionTile(
+                    title: 'Control',
+                    content: '• Remove infected plants\n• Practice crop rotation',
                   ),
                   const SizedBox(height: 16.0),
 
                   // Recommendations
-                  ExpansionTile(
-                    title: Text(
-                      'Recommendations',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          '• Increase nitrogen fertilization\n• Improve drainage\n• Monitor for pests',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
+                  _buildExpansionTile(
+                    title: 'Recommendations',
+                    content: '• Increase nitrogen fertilization\n• Improve drainage\n• Monitor for pests',
                   ),
                   const SizedBox(height: 16.0),
 
                   // Chemicals Needed
-                  ExpansionTile(
-                    title: Text(
-                      'Chemicals Needed',
-                      style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          '• Fungicides such as chlorothalonil\n• Copper-based solutions',
-                          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
-                        ),
-                      ),
-                    ],
-                  ),
+                  _buildChemicalsNeeded(),
                   const SizedBox(height: 32.0), // Extra space at the bottom
                 ],
               ),
@@ -220,6 +164,81 @@ class _BlightRecommendationsState extends State<BlightRecommendations> {
         unselectedItemColor: Colors.grey,
       ),
       backgroundColor: _isDarkMode ? Colors.black : Colors.white,
+    );
+  }
+
+  Widget _buildExpansionTile({required String title, required String content, List<Widget>? children}) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      color: _isDarkMode ? Colors.grey[850] : Colors.green[200], // Set background color
+      child: ExpansionTile(
+        title: Text(
+          title,
+          style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold, color: _isDarkMode ? Colors.white : Colors.black),
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              content,
+              style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black, fontSize: _fontSize),
+            ),
+          ),
+          if (children != null) ...children, // Add children if present
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChemicalsNeeded() {
+    return _buildExpansionTile(
+      title: 'Chemicals Needed',
+      content: '',
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(0.5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildChemicalCard('image/Shavitrust.jpg', 'Shavit'),
+              const SizedBox(height: 16.0),
+              _buildChemicalCard('assets/images/chemical2.jpg', 'Copper-based Solution'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChemicalCard(String imagePath, String chemicalName) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      color: _isDarkMode ? Colors.grey[850] : Colors.green[200], // Set background color
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+            child: Container(
+              width: 150, // Set the desired width
+              height: 150, // Set the desired height
+              child: Image.asset(imagePath, fit: BoxFit.cover),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              chemicalName,
+              style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

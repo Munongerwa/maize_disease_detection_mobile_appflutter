@@ -31,7 +31,7 @@ class _DiseaseHistoryPageState extends State<DiseaseHistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Disease Detection History", style: TextStyle(color: Colors.white),),
+        title: const Text("Disease Detection History", style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.green,
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
@@ -52,7 +52,7 @@ class _DiseaseHistoryPageState extends State<DiseaseHistoryPage> {
                 ),
                 child: Column(
                   children: [
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: DataTable(
@@ -69,9 +69,9 @@ class _DiseaseHistoryPageState extends State<DiseaseHistoryPage> {
                           final formattedDate = DateFormat('yyyy-MM-dd').format(date);
 
                           return DataRow(cells: [
-                            DataCell(Text(formattedDate, style: TextStyle(fontSize: 12))),
-                            DataCell(Text(record['disease'], style: TextStyle(fontSize: 12))),
-                            DataCell(Text(record['confidence'].toStringAsFixed(2), style: TextStyle(fontSize: 12))),
+                            DataCell(Text(formattedDate, style: const TextStyle(fontSize: 12))),
+                            DataCell(Text(record['disease'], style: const TextStyle(fontSize: 12))),
+                            DataCell(Text(record['confidence'].toStringAsFixed(2), style: const TextStyle(fontSize: 12))),
                           ]);
                         }).toList(),
                       ),
@@ -83,30 +83,32 @@ class _DiseaseHistoryPageState extends State<DiseaseHistoryPage> {
           }
         },
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => WelcomePage(username: widget.username)),
-              );
-            },
-            child: const Icon(Icons.home),
-            backgroundColor: Colors.green,
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
-          SizedBox(width: 16), // Space between buttons
-          FloatingActionButton(
-            onPressed: () {
-              _showClearConfirmationDialog();
-            },
-            child: const Icon(Icons.delete),
-            backgroundColor: Colors.red,
+          BottomNavigationBarItem(
+            icon: Icon(Icons.delete),
+            label: 'Clear History',
           ),
         ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => WelcomePage(username: widget.username)),
+            );
+          } else if (index == 1) {
+            _showClearConfirmationDialog();
+          }
+        },
+        backgroundColor: Colors.green, // Set the background color
+        selectedItemColor: Colors.white, // Set the selected item color
+        unselectedItemColor: Colors.white70, // Set the unselected item color
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
     );
   }
 
